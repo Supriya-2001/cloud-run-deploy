@@ -28,7 +28,7 @@ jobs:
 
       - name: Push the Docker image to Google Container Registry
         run: |
-          echo ${{ secrets.GCLOUD_SA_KEY }} | docker login -u _json_key --password-stdin https://gcr.io
+          echo ${{ secrets.GCLOUD_SA_KEY }}|
           docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/csv_to_parquetfile
 
       - name: Deploy the Cloud Run service
