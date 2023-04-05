@@ -11,9 +11,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCLOUD_SA_EMAIL }}
+          service_account_key: ${{ secrets.GCLOUD_SA_KEY }}
+          export_default_credentials: true
 
       - name: Build Docker image
-        run: docker build -t gcr.io/${{ secrets.GCLOUD_PROJECT-ID }}[PROJECT-ID]/csv-to-parquet .
+        run: docker build -t gcr.io/${{ secrets.GCLOUD_PROJECT-ID }}/csv-to-parquet .
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/setup-gcloud@V1
