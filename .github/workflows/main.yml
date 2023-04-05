@@ -26,12 +26,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v1
-        with:
-          push: true
-          tags: user/app:latest
-        
+      - name: Build the Docker image
+        run: docker build -t gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/csv_to_parquetfile.
+      - name: Push the Docker image to Google Container Registry
+        run: |
+          echo ${{ secrets.GCLOUD_SA_KEY }} | docker login -u _json_key --password-stdin https://gcr.io
+          docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/csv_to_parquetfile
+
       
       - name: Deploy the Cloud Run service
-        run: gcloud run deploy csv-to-parquet --image=gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/csv-to-parquet --region=us-central1 --platform=managed
+        run: gcloud run deploy csv-to-parquet --image=gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/csv_to_parquetfile --region=us-central1 --platform=managed
