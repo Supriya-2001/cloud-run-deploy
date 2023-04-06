@@ -40,7 +40,7 @@ jobs:
           
       - name: Build and Deploy
         run: |
-          gcloud builds submit \
+          gcloud build \
             --tag gcr.io/${{ env.PROJECT_ID }}/csv-to-parquet-image
           gcloud run deploy csv-to-parquet \
             --image gcr.io/${{ env.PROJECT_ID }}/csv-to-parquet-image:latest \
