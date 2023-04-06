@@ -39,9 +39,8 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v1'
         with:
           version: '>= 363.0.0'
-          project_id: ${{ env.PROJECT_ID }}
-          service_account_email: ${{env.SERVICE_NAME}}
-          service_account_key: ${{ secrets.GCLOUD_SA_KEY }}
+          workload_identity_provider: 'projects/326614876881/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          service_account: githubworkloadidentity@meta-sensor-380711.iam.gserviceaccount.com
           
       - name: Build and Deploy
         run: |
