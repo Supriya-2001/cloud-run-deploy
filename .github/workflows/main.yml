@@ -1,5 +1,4 @@
-#yaml file
-name: Build and Deploy to Cloud Run
+name: Build and Deploy to Cloud Run with Workload Identity Federation
 
 on:
   push:
@@ -8,7 +7,6 @@ on:
 
 env:
   PROJECT_ID: ${{secrets.GCLOUD_PROJECT_ID}}
-  SERVICE_NAME: ${{secrets.GCLOUD_SA_EMAIL}}
   REGION: us-central1
 
 jobs:
@@ -23,23 +21,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          token_format: 'access_token'
-          workload_identity_provider: 'projects/326614876881/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-          service_account: 'githubworkloadidentity@meta-sensor-380711.iam.gserviceaccount.com'
-          
-      - name: Set up Python
+      - name: 'Set up Python'
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
         
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
-          
-      - name: Build and Deploy
+        
+      - name: 'Authenticate using Workload Identity Federation'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          token_format: 'access_token'
+          workload_identity_pool: 'projects/326614876881/locations/global/workloadIdentityPools/my-pool'
+          role: 'roles/iam.workloadIdentityUser'
+        
+      - name: 'Build and Deploy'
         run: |
           gcloud builds submit \
             --tag gcr.io/${{ env.PROJECT_ID }}/csv-to-parquet-image
