@@ -27,8 +27,9 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
+          token_format: 'access_token'
           workload_identity_provider: 'projects/326614876881/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-          service_account: githubworkloadidentity@meta-sensor-380711.iam.gserviceaccount.com
+          service_account: 'githubworkloadidentity@meta-sensor-380711.iam.gserviceaccount.com'
           
       - name: Set up Python
         uses: actions/setup-python@v2
